@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -9,11 +10,13 @@ namespace Quiz_App
 {
     internal class Quiz
     {
-        private Question[] questions;
+        private Question[] _questions;
 
+        private int _score;
         public Quiz(Question[] questions)
         {
-            this.questions = questions;
+            this._questions = questions;
+            _score = 0;
         }
 
         public void StartQuiz()
@@ -21,7 +24,7 @@ namespace Quiz_App
             Console.WriteLine("Welcome to the Quiz - Kvizomanija!");
             int questionNumber = 1;
 
-            foreach (Question question in questions) 
+            foreach (Question question in _questions) 
             {
                 Console.WriteLine($"Question {questionNumber++}");
                 DisplayQuestion(question);
@@ -29,12 +32,43 @@ namespace Quiz_App
                 if (question.IsCorrectAnswer(userChoce))
                 {
                     Console.WriteLine("Correct!");
+                    _score++;
                 }
                 else
                 {
                     Console.WriteLine($"Wrong! The correct answer was: {question.Answers[question.CorrectAnswerIndex]}");
                 }
             }
+
+            DisplayResults();
+        }
+
+        private void DisplayResults()
+        {
+            Console.ForegroundColor = ConsoleColor.Magenta;
+            Console.WriteLine("╔═════════════════════════════════════════════════════════════════════════╗");
+            Console.WriteLine("║                                Results                                  ║");
+            Console.WriteLine("╚═════════════════════════════════════════════════════════════════════════╝");
+            Console.ResetColor();
+
+            Console.WriteLine($"Quiz finished.Your score is: {_score} out of {_questions.Length}");
+
+            double percentage = (double)_score / _questions.Length;
+            if(percentage > 0.8) 
+            {
+              Console.ForegroundColor = ConsoleColor.Green;
+                Console.WriteLine("Excellent Work");
+            }else if(percentage < 0.5)
+            {
+                Console.ForegroundColor = ConsoleColor.Yellow;
+                Console.WriteLine("Good Effort!");
+            }else
+            {
+                Console.ForegroundColor = ConsoleColor.Red;
+                Console.WriteLine("Keep practicing");
+            }
+
+            Console.ResetColor ();
         }
 
         private void DisplayQuestion(Question question)
